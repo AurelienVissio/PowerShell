@@ -13,23 +13,28 @@ function Set-ROHLeaver {
     General notes
     #>
     [CmdletBinding()]
-        param (
-            <#[parameter(Mandatory,ValueFromPipeline,ValueFromPipeLineByPropertyName)]
-            [ValidateNotNullOrEmpty()]
-            [string[]]$Name,#>
-            [parameter(ValueFromPipeline,ValueFromPipeLineByPropertyName)]
-            [ValidateNotNullOrEmpty()]
-            [string] $Server = (Get-ADDomain).PDCEmulator
-        )
+    param (
+        [parameter(ValueFromPipeLineByPropertyName)]
+        [ValidateNotNullOrEmpty()]
+        [string] $Server = (Get-ADDomain).PDCEmulator,
+        [parameter(ValueFromPipeline, ValueFromPipeLineByPropertyName)]
+        [ValidateNotNullOrEmpty()]
+        [string] $SearchBase
+    )
         
-        begin {
-        }
+    begin {
+    }
         
-        process {
-        Get-ADUser -Filter {Enabled -ne $true} | Set-ADUser -Clear msExchHideFromAddressLists,manager
-        }
+    process {
+        Get-ADUser -Filter {Enabled -ne $true} -Server $Server -SearchBase $SearchBase | 
+            Set-ADUser -Clear manager -Replace @{msExchHideFromAddressLists = $true} -Server $Server -Verbose
+        $results = Get-ADUser -Filter {Enabled -ne $true} -Properties manager, msExchHideFromAddressLists -Server $Server -SearchBase $SearchBase |
+            Select-Object -Property name, manager, msExchHideFromAddressLists |
+            Sort-Object -Property name
+        Write-Output $results
+    }
         
-        end {
-        }
+    end {
+    }
     
 }
