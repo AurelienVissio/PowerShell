@@ -14,9 +14,9 @@ function Set-ROHLeaver {
     #>
     [CmdletBinding()]
         param (
-            [parameter(Mandatory,ValueFromPipeline,ValueFromPipeLineByPropertyName)]
+            <#[parameter(Mandatory,ValueFromPipeline,ValueFromPipeLineByPropertyName)]
             [ValidateNotNullOrEmpty()]
-            [string[]]$Name,
+            [string[]]$Name,#>
             [parameter(ValueFromPipeline,ValueFromPipeLineByPropertyName)]
             [ValidateNotNullOrEmpty()]
             [string] $Server = (Get-ADDomain).PDCEmulator
@@ -26,6 +26,7 @@ function Set-ROHLeaver {
         }
         
         process {
+        Get-ADUser -Filter {Enabled -ne $true} | Set-ADUser -Clear msExchHideFromAddressLists,manager
         }
         
         end {
