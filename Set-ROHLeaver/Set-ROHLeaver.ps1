@@ -1,4 +1,4 @@
-function Set-ROHLeaver {
+function Set-ADLeaver {
     <#
     .SYNOPSIS
     Render AD attributes void
