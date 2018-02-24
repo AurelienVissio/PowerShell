@@ -7,7 +7,7 @@ function Set-ADLeaver {
     The script will look for specified atrributes with values and amend said values to a null state.
     
     .EXAMPLE
-    Set-ROHLeaver -Name John.Doe -Server Server1
+    Set-ADLeaver -Name John.Doe -Server Server1
     
     .NOTES
     General notes
